@@ -1,0 +1,218 @@
+[
+  {
+    "scrape_time": "2026-05-06T10:00:00Z",
+    "instance": "ubuntu-prod-01:9100",
+    "job": "node_exporter",
+    "system_id": "ubuntu-prod-01",
+    "application_name": "NodeExporter",
+    "tier": 1,
+    "cpu": {
+      "count": 4,
+      "usage_pct": 62.4,
+      "user_pct": 45.1,
+      "system_pct": 10.1,
+      "iowait_pct": 8.2,
+      "idle_pct": 37.6
+    },
+    "memory": {
+      "total_bytes": 17179869184,
+      "available_bytes": 4154957824,
+      "free_bytes": 2147483648,
+      "buffers_bytes": 536870912,
+      "cached_bytes": 2147483648
+    },
+    "filesystem": {
+      "device": "/dev/sda2",
+      "mountpoint": "/",
+      "fstype": "ext4",
+      "size_bytes": 549755813888,
+      "avail_bytes": 301242793984
+    },
+    "network": {
+      "tcp_active_connections": 31,
+      "tcp_time_wait": 6,
+      "tcp_close_wait": 2
+    },
+    "load": { "load1": 1.23, "load5": 0.98, "load15": 0.87 }
+  },
+  {
+    "scrape_time": "2026-05-06T10:00:00Z",
+    "instance": "api-gateway-prod:9100",
+    "job": "node_exporter",
+    "system_id": "api-gateway-prod",
+    "application_name": "API_Gateway",
+    "tier": 1,
+    "cpu": {
+      "count": 8,
+      "usage_pct": 78.9,
+      "user_pct": 65.3,
+      "system_pct": 9.2,
+      "iowait_pct": 4.4,
+      "idle_pct": 21.1
+    },
+    "memory": {
+      "total_bytes": 34359738368,
+      "available_bytes": 8589934592,
+      "free_bytes": 4294967296,
+      "buffers_bytes": 1073741824,
+      "cached_bytes": 4294967296
+    },
+    "filesystem": {
+      "device": "/dev/nvme0n1p2",
+      "mountpoint": "/",
+      "fstype": "ext4",
+      "size_bytes": 1099511627776,
+      "avail_bytes": 604462909440
+    },
+    "network": {
+      "tcp_active_connections": 512,
+      "tcp_time_wait": 48,
+      "tcp_close_wait": 11
+    },
+    "load": { "load1": 4.12, "load5": 3.87, "load15": 3.54 }
+  },
+  {
+    "scrape_time": "2026-05-06T10:00:00Z",
+    "instance": "postgres-db-prod:9100",
+    "job": "node_exporter",
+    "system_id": "postgres-db-prod",
+    "application_name": "PostgreSQL_DB",
+    "tier": 2,
+    "cpu": {
+      "count": 16,
+      "usage_pct": 91.2,
+      "user_pct": 72.4,
+      "system_pct": 14.6,
+      "iowait_pct": 4.2,
+      "idle_pct": 8.8
+    },
+    "memory": {
+      "total_bytes": 68719476736,
+      "available_bytes": 5368709120,
+      "free_bytes": 1073741824,
+      "buffers_bytes": 2147483648,
+      "cached_bytes": 4294967296
+    },
+    "filesystem": {
+      "device": "/dev/sdb1",
+      "mountpoint": "/",
+      "fstype": "xfs",
+      "size_bytes": 2199023255552,
+      "avail_bytes": 219902325555
+    },
+    "network": {
+      "tcp_active_connections": 1024,
+      "tcp_time_wait": 112,
+      "tcp_close_wait": 34
+    },
+    "load": { "load1": 9.87, "load5": 8.43, "load15": 7.91 }
+  },
+  {
+    "scrape_time": "2026-05-06T10:00:00Z",
+    "instance": "ml-pipeline-prod:9100",
+    "job": "node_exporter",
+    "system_id": "ml-pipeline-prod",
+    "application_name": "ML_Pipeline",
+    "tier": 2,
+    "cpu": {
+      "count": 32,
+      "usage_pct": 95.7,
+      "user_pct": 88.3,
+      "system_pct": 5.9,
+      "iowait_pct": 1.5,
+      "idle_pct": 4.3
+    },
+    "memory": {
+      "total_bytes": 137438953472,
+      "available_bytes": 17179869184,
+      "free_bytes": 8589934592,
+      "buffers_bytes": 4294967296,
+      "cached_bytes": 8589934592
+    },
+    "filesystem": {
+      "device": "/dev/nvme1n1p1",
+      "mountpoint": "/",
+      "fstype": "ext4",
+      "size_bytes": 4398046511104,
+      "avail_bytes": 879609302220
+    },
+    "network": {
+      "tcp_active_connections": 64,
+      "tcp_time_wait": 8,
+      "tcp_close_wait": 1
+    },
+    "load": { "load1": 28.4, "load5": 26.1, "load15": 22.7 }
+  },
+  {
+    "scrape_time": "2026-05-06T10:00:00Z",
+    "instance": "kafka-broker-prod:9100",
+    "job": "node_exporter",
+    "system_id": "kafka-broker-prod",
+    "application_name": "Kafka_Broker",
+    "tier": 2,
+    "cpu": {
+      "count": 8,
+      "usage_pct": 44.3,
+      "user_pct": 28.7,
+      "system_pct": 8.1,
+      "iowait_pct": 7.5,
+      "idle_pct": 55.7
+    },
+    "memory": {
+      "total_bytes": 34359738368,
+      "available_bytes": 12884901888,
+      "free_bytes": 4294967296,
+      "buffers_bytes": 2147483648,
+      "cached_bytes": 8589934592
+    },
+    "filesystem": {
+      "device": "/dev/sdc1",
+      "mountpoint": "/",
+      "fstype": "ext4",
+      "size_bytes": 2199023255552,
+      "avail_bytes": 769657139443
+    },
+    "network": {
+      "tcp_active_connections": 256,
+      "tcp_time_wait": 22,
+      "tcp_close_wait": 5
+    },
+    "load": { "load1": 2.91, "load5": 2.74, "load15": 2.58 }
+  },
+  {
+    "scrape_time": "2026-05-06T10:00:00Z",
+    "instance": "nginx-web-prod:9100",
+    "job": "node_exporter",
+    "system_id": "nginx-web-prod",
+    "application_name": "Nginx_WebServer",
+    "tier": 3,
+    "cpu": {
+      "count": 4,
+      "usage_pct": 18.6,
+      "user_pct": 11.2,
+      "system_pct": 4.8,
+      "iowait_pct": 2.6,
+      "idle_pct": 81.4
+    },
+    "memory": {
+      "total_bytes": 8589934592,
+      "available_bytes": 5368709120,
+      "free_bytes": 3221225472,
+      "buffers_bytes": 536870912,
+      "cached_bytes": 1610612736
+    },
+    "filesystem": {
+      "device": "/dev/sda1",
+      "mountpoint": "/",
+      "fstype": "ext4",
+      "size_bytes": 274877906944,
+      "avail_bytes": 192414534861
+    },
+    "network": {
+      "tcp_active_connections": 843,
+      "tcp_time_wait": 201,
+      "tcp_close_wait": 14
+    },
+    "load": { "load1": 0.67, "load5": 0.72, "load15": 0.81 }
+  }
+]

@@ -1,0 +1,95 @@
+# APIFICATION: local orchestration for the three services + a dev Postgres.
+#
+# Prod / cloud: only the three application services matter. Bring your own
+# Postgres and point DATABASE_URL at it.
+#
+# Usage:
+#   docker compose --env-file .env up --build
+#   docker compose logs -f core-service
+#
+# Ports on the host:
+#   8100  reader-service  (polled by core-service)
+#   8000  core-service    (UI-facing REST + background pipeline)
+#   8501  ui-service      (Streamlit dashboard)
+#   5432  postgres        (dev only — override in prod)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: serverops
+      POSTGRES_PASSWORD: serverops
+      POSTGRES_DB: serverops
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U serverops -d serverops"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  reader-service:
+    build:
+      context: .
+      dockerfile: services/reader/Dockerfile
+    image: serverops/reader:latest
+    ports:
+      - "8100:8100"
+    environment:
+      TENANT_ID: "1"
+      MODULES_YAML: /app/config/modules.yaml
+    volumes:
+      # Host input tree feeds the readers exactly like it does in single-process mode.
+      - ./data/input:/app/data/input
+      # Named volume so reader checkpoints survive container restarts.
+      - reader-state:/app/data/state
+    restart: unless-stopped
+
+  core-service:
+    build:
+      context: .
+      dockerfile: services/core/Dockerfile
+    image: serverops/core:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      reader-service:
+        condition: service_started
+    env_file:
+      # Bring your DB, LLM, ServiceNow, Jira, Langfuse creds via .env — see .env.example.
+      - .env
+    environment:
+      READER_SERVICE_URL: http://reader-service:8100
+      TENANT_ID: "1"
+      INTERVAL_SEC: "10"
+      MODULES_YAML: /app/config/modules.yaml
+      # Override the dev-Postgres wiring here if you prefer .env.
+      DATABASE_URL: ${DATABASE_URL:-postgresql://serverops:serverops@postgres:5432/serverops}
+    volumes:
+      # Vector index + any local file outputs the sinks produce (mock SNOW/Jira dumps).
+      - core-data:/app/.data
+    restart: unless-stopped
+
+  ui-service:
+    build:
+      context: .
+      dockerfile: services/ui/Dockerfile
+    image: serverops/ui:latest
+    ports:
+      - "8501:8501"
+    depends_on:
+      core-service:
+        condition: service_started
+    environment:
+      CORE_SERVICE_URL: http://core-service:8000
+      TENANT_ID: "1"
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  reader-state:
+  core-data:

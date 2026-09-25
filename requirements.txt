@@ -1,0 +1,26 @@
+psutil
+openai
+pydantic
+python-dotenv
+psycopg2-binary
+sqlalchemy>=2.0
+alembic>=1.13
+PyYAML>=6.0
+langgraph
+streamlit
+plotly
+streamlit-autorefresh
+httpx
+# POINT 19 (Task #19): precedent vector search (FAISS backend + embeddings)
+faiss-cpu
+numpy
+# POINT 20 (Task #20): Jira ticket per command execution via a local MCP server
+fastmcp
+# Secrets: Azure Key Vault in the cloud (no-op locally; .env is the local fallback)
+azure-identity
+azure-keyvault-secrets
+# POINT 21 (Task #21): the real-time UI timeline needs NO extra deps. These power the
+# optional OpenTelemetry spans -> infra APM and/or Langfuse (via OTLP). Safe no-ops if
+# observability.otel_enabled / langfuse_enabled are false.
+opentelemetry-sdk
+opentelemetry-exporter-otlp

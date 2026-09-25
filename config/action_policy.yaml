@@ -1,0 +1,12 @@
+tools:
+  stress-ng:
+    action: stop_tool
+    match: "stress-ng"
+
+process_rules:
+  default:
+    action: kill_process
+
+threshold_rules:
+  cpu_sustained_high:
+    action: kill_process

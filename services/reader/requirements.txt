@@ -1,0 +1,12 @@
+# APIFICATION: reader-service dependencies.
+# Deliberately lean — no DB, no LLM, no vectorstore, no streamlit.
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2
+PyYAML>=6.0
+python-dotenv
+# Some concrete readers reach out over HTTP (prometheus, appian, pega).
+httpx
+# Secrets loader (no-op locally; Key Vault in Azure). Kept for parity with app/secrets.py.
+azure-identity
+azure-keyvault-secrets

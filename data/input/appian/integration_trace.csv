@@ -1,0 +1,21 @@
+Timestamp,Integration UUID,Success,Timeout,Username,Operation/Method,Total Time (ms),Prepare Time (ms),Execute time (ms),Transform Time (ms),Connected System UUID,Process ID,Status Code
+2026-05-25 14:15:12,_a-int-creditCheck-0001,true,false,user-uuid-abc,POST,148,12,124,12,_a-cs-credit-bureau,78812,200
+2026-05-25 14:15:34,_a-int-customerLookup-0002,true,false,user-uuid-def,GET,87,8,72,7,_a-cs-customer-svc,78815,200
+2026-05-25 14:16:02,_a-int-creditCheck-0001,true,false,user-uuid-ghi,POST,152,11,128,13,_a-cs-credit-bureau,78820,200
+2026-05-25 14:16:45,_a-int-docFetch-0003,true,false,user-uuid-jkl,GET,210,15,180,15,_a-cs-docstore,78825,200
+2026-05-25 14:17:18,_a-int-customerLookup-0002,true,false,user-uuid-abc,GET,92,9,76,7,_a-cs-customer-svc,78830,200
+2026-05-25 14:18:09,_a-int-creditCheck-0001,true,false,user-uuid-mno,POST,165,12,140,13,_a-cs-credit-bureau,78850,200
+2026-05-25 14:19:23,_a-int-creditCheck-0001,true,false,user-uuid-pqr,POST,178,13,151,14,_a-cs-credit-bureau,78870,200
+2026-05-25 14:20:14,_a-int-customerLookup-0002,true,false,user-uuid-def,GET,95,10,77,8,_a-cs-customer-svc,78880,200
+2026-05-25 14:21:02,_a-int-creditCheck-0001,true,false,user-uuid-abc,POST,3120,14,3092,14,_a-cs-credit-bureau,78901,200
+2026-05-25 14:21:48,_a-int-docFetch-0003,true,false,user-uuid-stu,GET,1850,15,1822,13,_a-cs-docstore,78912,200
+2026-05-25 14:22:08,_a-int-creditCheck-0001,false,true,user-uuid-abc,POST,30000,14,29972,14,_a-cs-credit-bureau,78901,504
+2026-05-25 14:22:55,_a-int-customerLookup-0002,false,false,user-uuid-vwx,GET,12450,12,12426,12,_a-cs-customer-svc,79020,500
+2026-05-25 14:23:30,_a-int-creditCheck-0001,false,true,user-uuid-yza,POST,30000,15,29971,14,_a-cs-credit-bureau,79055,504
+2026-05-25 14:24:11,_a-int-docFetch-0003,false,true,user-uuid-bcd,GET,30000,13,29975,12,_a-cs-docstore,79072,504
+2026-05-25 14:25:02,_a-int-creditCheck-0001,false,true,user-uuid-efg,POST,30000,14,29973,13,_a-cs-credit-bureau,79088,504
+2026-05-25 14:25:44,_a-int-creditCheck-0001,false,false,user-uuid-hij,POST,18300,13,18275,12,_a-cs-credit-bureau,79091,500
+2026-05-25 14:26:25,_a-int-creditCheck-0001,false,true,user-uuid-klm,POST,30000,15,29972,13,_a-cs-credit-bureau,79115,504
+2026-05-25 14:27:18,_a-int-customerLookup-0002,true,false,user-uuid-nop,GET,4520,10,4502,8,_a-cs-customer-svc,79140,200
+2026-05-25 14:28:55,_a-int-creditCheck-0001,true,false,user-uuid-qrs,POST,890,13,864,13,_a-cs-credit-bureau,79175,200
+2026-05-25 14:29:33,_a-int-customerLookup-0002,true,false,user-uuid-def,GET,102,9,85,8,_a-cs-customer-svc,79188,200

@@ -1,0 +1,6 @@
+# APIFICATION: ui-service dependencies. No SQL, no LLM, no vectorstore.
+streamlit
+streamlit-autorefresh
+plotly
+pandas
+httpx

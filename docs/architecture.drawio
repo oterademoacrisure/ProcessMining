@@ -1,0 +1,63 @@
+<mxfile host="app.diagrams.net" version="22.0.0">
+  <diagram name="Architecture" id="arch1">
+    <mxGraphModel dx="1200" dy="760" grid="1" gridSize="10" guides="1" connect="1" arrows="1" page="1" pageWidth="1169" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="Process Mining - Multi-Source RCA   |   Architecture" style="text;html=1;fontSize=22;fontStyle=1;fontColor=#1F4E79;align=left;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="900" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="src" value="TELEMETRY SOURCES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF2FB;strokeColor=#1C66C9;verticalAlign=top;fontStyle=1;fontColor=#1C66C9;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="Appian (x3)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1C66C9;strokeColor=none;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="src">
+          <mxGeometry x="15" y="44" width="170" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Mule" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1C66C9;strokeColor=none;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="src">
+          <mxGeometry x="15" y="90" width="170" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Prometheus" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1C66C9;strokeColor=none;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="src">
+          <mxGeometry x="15" y="136" width="170" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Fluentd" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1C66C9;strokeColor=none;fontColor=#FFFFFF;fontStyle=1" vertex="1" parent="src">
+          <mxGeometry x="15" y="182" width="170" height="36" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t1" value="&lt;b&gt;TIER 1&lt;/b&gt;&lt;br&gt;Ingest &amp; Detect&lt;br&gt;&lt;br&gt;Readers -&gt; Analyzers&lt;br&gt;event_log -&gt; finding" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#27AE60;strokeColor=none;fontColor=#FFFFFF;fontSize=12;shadow=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="150" width="200" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="&lt;b&gt;TIER 2&lt;/b&gt;&lt;br&gt;Correlate &amp; Diagnose&lt;br&gt;&lt;br&gt;Grouper -&gt; Incident&lt;br&gt;LLM RCA&lt;br&gt;root_cause_report" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E67E22;strokeColor=none;fontColor=#FFFFFF;fontSize=12;shadow=1" vertex="1" parent="1">
+          <mxGeometry x="600" y="150" width="200" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="&lt;b&gt;TIER 3&lt;/b&gt;&lt;br&gt;Remediate (human-gated)&lt;br&gt;&lt;br&gt;LangGraph:&lt;br&gt;validate-execute-verify" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6336C;strokeColor=none;fontColor=#FFFFFF;fontSize=12;shadow=1" vertex="1" parent="1">
+          <mxGeometry x="880" y="150" width="200" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hist" value="&lt;b&gt;historical_incident&lt;/b&gt;&lt;br&gt;(precedent memory)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=none;fontColor=#FFFFFF" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="azure" value="&lt;b&gt;Azure OpenAI&lt;/b&gt;&lt;br&gt;(diagnosis)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=none;fontColor=#FFFFFF" vertex="1" parent="1">
+          <mxGeometry x="320" y="440" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="snow" value="&lt;b&gt;ServiceNow&lt;/b&gt;&lt;br&gt;(tickets)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=none;fontColor=#FFFFFF" vertex="1" parent="1">
+          <mxGeometry x="600" y="440" width="200" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="ui" value="&lt;b&gt;Streamlit UI&lt;/b&gt;&lt;br&gt;(operator)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7C3AED;strokeColor=none;fontColor=#FFFFFF" vertex="1" parent="1">
+          <mxGeometry x="880" y="440" width="200" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;strokeColor=#1F4E79;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;rounded=0" edge="1" parent="1" source="src" target="t1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;strokeColor=#1F4E79;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;rounded=0" edge="1" parent="1" source="t1" target="t2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" style="endArrow=block;html=1;strokeColor=#1F4E79;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;rounded=0" edge="1" parent="1" source="t2" target="t3"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <mxCell id="e4" value="precedent &gt;= 0.60" style="endArrow=block;html=1;dashed=1;strokeColor=#7C3AED;strokeWidth=2;fontColor=#7C3AED;fontSize=10" edge="1" parent="1" source="hist" target="t2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" value="LLM" style="endArrow=classic;startArrow=classic;html=1;dashed=1;strokeColor=#7C3AED;strokeWidth=2;fontColor=#7C3AED;fontSize=10" edge="1" parent="1" source="azure" target="t2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" value="file ticket" style="endArrow=block;html=1;dashed=1;strokeColor=#7C3AED;strokeWidth=2;fontColor=#7C3AED;fontSize=10" edge="1" parent="1" source="t2" target="snow"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" value="approve" style="endArrow=block;html=1;dashed=1;strokeColor=#7C3AED;strokeWidth=2;fontColor=#7C3AED;fontSize=10" edge="1" parent="1" source="ui" target="t3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="nightly sync of resolved" style="endArrow=block;html=1;dashed=1;strokeColor=#788290;strokeWidth=2;fontColor=#788290;fontSize=10" edge="1" parent="1" source="snow" target="hist"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

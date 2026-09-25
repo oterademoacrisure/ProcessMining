@@ -1,0 +1,417 @@
+{
+  "now": "2026-04-20 19:31:13",
+  "hostname": "ubuntu",
+  "os_name": "Linux",
+  "os_version": "6.8.0-51-generic",
+  "python_version": "3.12.3",
+  "glances_version": "3.4.0",
+
+  "cpu": {
+    "total": 11.5,
+    "user": 8.2,
+    "system": 3.3,
+    "idle": 88.5,
+    "nice": 0.0,
+    "iowait": 0.0,
+    "irq": 0.0,
+    "softirq": 0.0,
+    "steal": 0.0,
+    "guest": 0.0,
+    "guest_nice": 0.0,
+    "cpu_count": 4,
+    "cpu_count_logical": 4
+  },
+
+  "mem": {
+    "total": 17179869184,
+    "available": 4154957824,
+    "percent": 75.8,
+    "used": 13024911360,
+    "free": 4154957824,
+    "active": 8589934592,
+    "inactive": 3221225472,
+    "buffers": 536870912,
+    "cached": 2147483648,
+    "shared": 268435456,
+    "total_gb": 16.0,
+    "used_gb": 12.1,
+    "free_gb": 3.9
+  },
+
+  "memswap": {
+    "total": 2147483648,
+    "used": 104857600,
+    "free": 2042625048,
+    "percent": 4.9,
+    "sin": 0,
+    "sout": 104857600
+  },
+
+  "load": {
+    "min1": 1.23,
+    "min5": 0.98,
+    "min15": 0.87,
+    "cpucore": 4
+  },
+
+  "diskio": [
+    {
+      "disk_name": "sda",
+      "read_count": 4821,
+      "write_count": 12043,
+      "read_bytes": 198967296,
+      "write_bytes": 512458752,
+      "read_time": 1230,
+      "write_time": 3210,
+      "time_since_update": 1.0
+    }
+  ],
+
+  "fs": [
+    {
+      "device_name": "/dev/sda2",
+      "fs_type": "ext4",
+      "mnt_point": "/",
+      "size": 549755813888,
+      "used": 248513019904,
+      "free": 301242793984,
+      "percent": 45.2,
+      "size_gb": 512.0,
+      "used_gb": 231.5,
+      "free_gb": 280.5
+    }
+  ],
+
+  "network": [
+    {
+      "interface_name": "wlo1",
+      "cumulative_cx": 2147483648,
+      "cx": 102400,
+      "cumulative_rx": 1610612736,
+      "rx": 81920,
+      "cumulative_tx": 536870912,
+      "tx": 20480,
+      "speed": 300,
+      "is_up": true,
+      "time_since_update": 1.0
+    },
+    {
+      "interface_name": "lo",
+      "cumulative_cx": 10485760,
+      "cx": 1024,
+      "cumulative_rx": 5242880,
+      "rx": 512,
+      "cumulative_tx": 5242880,
+      "tx": 512,
+      "speed": 0,
+      "is_up": true,
+      "time_since_update": 1.0
+    }
+  ],
+
+  "connections": {
+    "total": 42,
+    "established": 24,
+    "listen": 12,
+    "time_wait": 4,
+    "close_wait": 2
+  },
+
+  "processcount": {
+    "total": 210,
+    "running": 2,
+    "sleeping": 198,
+    "thread": 1024,
+    "pid_max": 4194304
+  },
+
+  "processlist": [
+    {
+      "pid": 219452,
+      "name": "chrome",
+      "application_name": "Google Chrome",
+      "cmdline": ["/usr/lib/chromium/chrome", "--type=renderer", "--enable-features=NetworkServiceInProcess2"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 4.5,
+      "memory_percent": 11.55,
+      "memory_info": {
+        "rss": 1210580992,
+        "vms": 2415919104
+      },
+      "num_threads": 32,
+      "nice": 0,
+      "io_counters": [2097152, 4194304, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 233169,
+      "name": "chrome",
+      "application_name": "Google Chrome",
+      "cmdline": ["/usr/lib/chromium/chrome", "--type=renderer", "--disable-backgrounding-occluded-windows"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 3.2,
+      "memory_percent": 10.47,
+      "memory_info": {
+        "rss": 1097334784,
+        "vms": 2281701376
+      },
+      "num_threads": 28,
+      "nice": 0,
+      "io_counters": [1048576, 2097152, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 217979,
+      "name": "code",
+      "application_name": "Visual Studio Code",
+      "cmdline": ["/usr/share/code/code", "--ms-enable-electron-run-as-node", "--unity-launch"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 12.3,
+      "memory_percent": 10.15,
+      "memory_info": {
+        "rss": 1064083046,
+        "vms": 2130706432
+      },
+      "num_threads": 42,
+      "nice": 0,
+      "io_counters": [524288, 1048576, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 217728,
+      "name": "code",
+      "application_name": "Visual Studio Code - Extension Host",
+      "cmdline": ["/usr/share/code/code", "--type=extensionHost", "--skipWorkspaceStorageLock"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 5.1,
+      "memory_percent": 8.70,
+      "memory_info": {
+        "rss": 911540224,
+        "vms": 1879048192
+      },
+      "num_threads": 35,
+      "nice": 0,
+      "io_counters": [262144, 524288, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 236217,
+      "name": "python3",
+      "application_name": "EDDI Metrics Collector",
+      "cmdline": ["python3", "collector.py", "--interval=5", "--output=db"],
+      "username": "root",
+      "status": "R",
+      "cpu_percent": 69.9,
+      "memory_percent": 0.18,
+      "memory_info": {
+        "rss": 18874368,
+        "vms": 37748736
+      },
+      "num_threads": 4,
+      "nice": 0,
+      "io_counters": [65536, 131072, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 216442,
+      "name": "gnome-shell",
+      "application_name": "GNOME Shell (Desktop)",
+      "cmdline": ["/usr/bin/gnome-shell"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 1.8,
+      "memory_percent": 3.22,
+      "memory_info": {
+        "rss": 337641472,
+        "vms": 675282944
+      },
+      "num_threads": 12,
+      "nice": 0,
+      "io_counters": [32768, 65536, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 2081,
+      "name": "ollama",
+      "application_name": "Ollama LLM Server",
+      "cmdline": ["/usr/local/bin/ollama", "serve"],
+      "username": "root",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.09,
+      "memory_info": {
+        "rss": 9437184,
+        "vms": 18874368
+      },
+      "num_threads": 8,
+      "nice": 0,
+      "io_counters": [16384, 32768, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 1428,
+      "name": "dockerd",
+      "application_name": "Docker Daemon",
+      "cmdline": ["/usr/bin/dockerd", "-H", "fd://", "--containerd=/run/containerd/containerd.sock"],
+      "username": "root",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.21,
+      "memory_info": {
+        "rss": 22020096,
+        "vms": 44040192
+      },
+      "num_threads": 16,
+      "nice": 0,
+      "io_counters": [8192, 16384, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 1384,
+      "name": "containerd",
+      "application_name": "Containerd Runtime",
+      "cmdline": ["/usr/bin/containerd"],
+      "username": "root",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.15,
+      "memory_info": {
+        "rss": 16106127,
+        "vms": 32212254
+      },
+      "num_threads": 10,
+      "nice": 0,
+      "io_counters": [4096, 8192, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 1128,
+      "name": "NetworkManager",
+      "application_name": "Network Manager",
+      "cmdline": ["/usr/sbin/NetworkManager", "--no-daemon"],
+      "username": "root",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.20,
+      "memory_info": {
+        "rss": 21299200,
+        "vms": 42598400
+      },
+      "num_threads": 6,
+      "nice": 0,
+      "io_counters": [2048, 4096, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 217618,
+      "name": "code",
+      "application_name": "Visual Studio Code - Main",
+      "cmdline": ["/usr/share/code/code", "--no-sandbox", "--unity-launch"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 2.1,
+      "memory_percent": 1.95,
+      "memory_info": {
+        "rss": 204472320,
+        "vms": 408944640
+      },
+      "num_threads": 22,
+      "nice": 0,
+      "io_counters": [1024, 2048, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 218471,
+      "name": "nautilus",
+      "application_name": "GNOME Files (Nautilus)",
+      "cmdline": ["/usr/bin/nautilus", "--gapplication-service"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 1.45,
+      "memory_info": {
+        "rss": 151900160,
+        "vms": 303800320
+      },
+      "num_threads": 8,
+      "nice": 0,
+      "io_counters": [512, 1024, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 292,
+      "name": "systemd-journald",
+      "application_name": "Systemd Journal",
+      "cmdline": ["/lib/systemd/systemd-journald"],
+      "username": "root",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.56,
+      "memory_info": {
+        "rss": 58720256,
+        "vms": 117440512
+      },
+      "num_threads": 3,
+      "nice": 0,
+      "io_counters": [256, 512, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 1024,
+      "name": "snapd",
+      "application_name": "Snap Daemon",
+      "cmdline": ["/usr/lib/snapd/snapd"],
+      "username": "root",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 0.31,
+      "memory_info": {
+        "rss": 32505856,
+        "vms": 65011712
+      },
+      "num_threads": 14,
+      "nice": 0,
+      "io_counters": [128, 256, 0, 0, 0],
+      "time_since_update": 1.0
+    },
+    {
+      "pid": 218414,
+      "name": "gnome-text-editor",
+      "application_name": "GNOME Text Editor",
+      "cmdline": ["/usr/bin/gnome-text-editor"],
+      "username": "user",
+      "status": "S",
+      "cpu_percent": 0.0,
+      "memory_percent": 1.02,
+      "memory_info": {
+        "rss": 106954752,
+        "vms": 213909504
+      },
+      "num_threads": 6,
+      "nice": 0,
+      "io_counters": [64, 128, 0, 0, 0],
+      "time_since_update": 1.0
+    }
+  ],
+
+  "db_metrics_ready": {
+    "Time_Stamp":           "2026-04-20T19:31:13",
+    "System_Id":            "ubuntu-prod-01",
+    "Application_Name":     "EDDI-Collector",
+    "Hostname":             "ubuntu",
+    "Tier":                 1,
+    "CPU_Allocated_vCPU":   4,
+    "CPU_Usage_Pct":        11.5,
+    "Memory_Allocated_GB":  16.0,
+    "Memory_Usage_Pct":     75.8,
+    "Storage_Allocated_GB": 512.0,
+    "Storage_Usage_Pct":    45.2,
+    "Active_Connections":   24,
+    "Slow_Query_Count":     3,
+    "Wait_Type":            "CPU"
+  }
+}

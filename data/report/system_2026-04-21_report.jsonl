@@ -1,0 +1,266 @@
+{
+    "pattern": {
+        "cpu_trend": "fluctuating",
+        "memory_trend": "increasing",
+        "cpu_sustained_high": true,
+        "memory_sustained_high": false,
+        "avg_cpu": 80.54,
+        "latest_cpu": 85.9,
+        "latest_memory": 74.2,
+        "suspected_process": "stress-ng-cpu",
+        "suspected_process_id": 236749,
+        "observation": "Sustained high CPU usage detected",
+        "severity": "critical"
+    },
+    "rca": {
+        "issue": "Sustained High CPU Usage",
+        "probable_cause": "Process 'stress-ng-cpu' consuming CPU continuously",
+        "confidence": 0.85,
+        "recommendation": "Restart or investigate 'stress-ng-cpu'",
+        "action": "kill_process",
+        "command": "pkill -f stress-ng-cpu",
+        "source": "hybrid"
+    },
+    "execution": {
+        "timestamp": "2026-04-21T10:33:24.603210",
+        "status": "success",
+        "details": "Executed: pkill -f stress-ng-cpu"
+    },
+    "approval": {
+        "approved": true,
+        "reason": "User approved action"
+    },
+    "human_summary": {
+        "incident_summary": {
+            "what_happened": "Sustained high CPU usage detected due to the 'stress-ng-cpu' process.",
+            "root_cause": "The 'stress-ng-cpu' process was continuously consuming excessive CPU resources.",
+            "impact": "Critical system performance degradation due to CPU saturation.",
+            "action_taken": "Process 'stress-ng-cpu' was terminated using 'pkill -f stress-ng-cpu' after user approval."
+        }
+    }
+}
+
+==================== FINAL REPORT: 2026-04-21 16:08:07 ====================
+{
+    "pattern": {
+        "cpu_trend": "fluctuating",
+        "memory_trend": "increasing",
+        "cpu_sustained_high": true,
+        "memory_sustained_high": false,
+        "avg_cpu": 80.54,
+        "latest_cpu": 85.9,
+        "latest_memory": 74.2,
+        "suspected_process": "stress-ng-cpu",
+        "suspected_process_id": 236749,
+        "observation": "Sustained high CPU usage detected",
+        "severity": "critical"
+    },
+    "rca": {
+        "issue": "Sustained High CPU Usage",
+        "probable_cause": "Process 'stress-ng-cpu' consuming CPU continuously",
+        "confidence": 0.85,
+        "recommendation": "Restart or investigate 'stress-ng-cpu'",
+        "action": "kill_process",
+        "command": "pkill -f stress-ng-cpu",
+        "source": "hybrid"
+    },
+    "execution": {
+        "timestamp": "2026-04-21T10:37:41.590897",
+        "status": "success",
+        "details": "Executed: pkill -f stress-ng-cpu"
+    },
+    "approval": {
+        "approved": true,
+        "reason": "User approved action"
+    },
+    "human_summary": {
+        "summary": {
+            "incident": "Sustained high CPU usage detected on the system.",
+            "root_cause": "Process 'stress-ng-cpu' continuously consuming excessive CPU resources.",
+            "impact": "Critical system performance degradation due to high CPU utilization (avg 80.54%, latest 85.9%).",
+            "action_taken": "Process 'stress-ng-cpu' was terminated using 'pkill -f stress-ng-cpu' command with user approval."
+        }
+    }
+}
+
+
+
+==================== FINAL REPORT: 2026-04-21 16:09:18 ====================
+{
+    "pattern": {
+        "cpu_trend": "fluctuating",
+        "memory_trend": "increasing",
+        "cpu_sustained_high": true,
+        "memory_sustained_high": false,
+        "avg_cpu": 80.54,
+        "latest_cpu": 85.9,
+        "latest_memory": 74.2,
+        "suspected_process": "stress-ng-cpu",
+        "suspected_process_id": 236749,
+        "observation": "Sustained high CPU usage detected",
+        "severity": "critical"
+    },
+    "rca": {
+        "issue": "Sustained High CPU Usage",
+        "probable_cause": "Process 'stress-ng-cpu' consuming CPU continuously",
+        "confidence": 0.85,
+        "recommendation": "Restart or investigate 'stress-ng-cpu'",
+        "action": "kill_process",
+        "command": "pkill -f stress-ng-cpu",
+        "source": "hybrid"
+    },
+    "execution": {
+        "timestamp": "2026-04-21T10:38:39.665626",
+        "status": "error",
+        "details": "Command '['pkill', '-f', 'stress-ng-cpu']' returned non-zero exit status 1."
+    },
+    "approval": {
+        "approved": true,
+        "reason": "User approved action"
+    },
+    "human_summary": {
+        "incident_summary": {
+            "what_happened": "Sustained high CPU usage detected due to the process 'stress-ng-cpu'.",
+            "root_cause": "The process 'stress-ng-cpu' was continuously consuming excessive CPU resources.",
+            "impact": "Critical system performance degradation due to CPU saturation.",
+            "action_taken": "Attempted to kill 'stress-ng-cpu' process using 'pkill -f stress-ng-cpu', but command returned a non-zero exit status indicating failure. Action was approved by user."
+        }
+    }
+}
+
+
+
+==================== FINAL REPORT: 2026-04-21 16:10:05 ====================
+{
+    "pattern": {
+        "cpu_trend": "fluctuating",
+        "memory_trend": "increasing",
+        "cpu_sustained_high": true,
+        "memory_sustained_high": false,
+        "avg_cpu": 80.54,
+        "latest_cpu": 85.9,
+        "latest_memory": 74.2,
+        "suspected_process": "stress-ng-cpu",
+        "suspected_process_id": 236749,
+        "observation": "Sustained high CPU usage detected",
+        "severity": "critical"
+    },
+    "rca": {
+        "issue": "Sustained High CPU Usage",
+        "probable_cause": "Process 'stress-ng-cpu' consuming CPU continuously",
+        "confidence": 0.85,
+        "recommendation": "Restart or investigate 'stress-ng-cpu'",
+        "action": "kill_process",
+        "command": "pkill -f stress-ng-cpu",
+        "source": "hybrid"
+    },
+    "execution": {
+        "timestamp": "2026-04-21T10:40:01.201304",
+        "status": "skipped",
+        "details": "Execution skipped (not approved)"
+    },
+    "approval": {
+        "approved": false,
+        "reason": "User rejected action"
+    },
+    "human_summary": {
+        "incident_summary": {
+            "what_happened": "Sustained high CPU usage detected, primarily caused by process 'stress-ng-cpu' (PID 236749).",
+            "root_cause": "Process 'stress-ng-cpu' was continuously consuming excessive CPU resources.",
+            "impact": "Critical system performance degradation due to high CPU utilization (average 80.54%, latest 85.9%).",
+            "action_taken": "Recommended to kill or investigate 'stress-ng-cpu' process. Planned action to terminate process was not executed due to lack of approval."
+        }
+    }
+}
+
+
+
+==================== FINAL REPORT: 2026-04-21 16:15:50 ====================
+{
+    "pattern": {
+        "cpu_trend": "fluctuating",
+        "memory_trend": "increasing",
+        "cpu_sustained_high": true,
+        "memory_sustained_high": false,
+        "avg_cpu": 80.54,
+        "latest_cpu": 85.9,
+        "latest_memory": 74.2,
+        "suspected_process": "stress-ng-cpu",
+        "suspected_process_id": 236749,
+        "observation": "Sustained high CPU usage detected",
+        "severity": "critical"
+    },
+    "rca": {
+        "issue": "Sustained high CPU usage detected with fluctuating CPU trend and increasing memory usage.",
+        "probable_cause": "The process 'stress-ng-cpu' (PID 236749) is consuming excessive CPU resources, causing critical CPU load.",
+        "confidence": 0.95,
+        "recommendation": "Investigate the necessity of the 'stress-ng-cpu' process. If it is not required, terminate it to reduce CPU load. If required, consider optimizing or limiting its CPU usage.",
+        "action": "kill_process",
+        "command": "pkill -f stress-ng-cpu",
+        "source": "hybrid"
+    },
+    "execution": {
+        "timestamp": "2026-04-21T10:45:23.449972",
+        "status": "success",
+        "details": "Executed: pkill -f stress-ng-cpu"
+    },
+    "approval": {
+        "approved": true,
+        "reason": "User approved action"
+    },
+    "human_summary": {
+        "incident_summary": {
+            "what_happened": "Sustained high CPU usage with fluctuating CPU trend and increasing memory usage was detected.",
+            "root_cause": "The 'stress-ng-cpu' process (PID 236749) was consuming excessive CPU resources, causing critical CPU load.",
+            "impact": "System experienced critical CPU load with average CPU usage above 80%, potentially affecting performance and stability.",
+            "action_taken": "The 'stress-ng-cpu' process was terminated using 'pkill -f stress-ng-cpu' following user approval."
+        }
+    }
+}
+
+
+
+==================== FINAL REPORT: 2026-04-21 16:48:38 ====================
+{
+    "pattern": {
+        "cpu_trend": "fluctuating",
+        "memory_trend": "increasing",
+        "cpu_sustained_high": true,
+        "memory_sustained_high": false,
+        "avg_cpu": 80.54,
+        "latest_cpu": 85.9,
+        "latest_memory": 74.2,
+        "suspected_process": "stress-ng-cpu",
+        "suspected_process_id": 236749,
+        "observation": "Sustained high CPU usage detected",
+        "severity": "critical"
+    },
+    "rca": {
+        "issue": "Sustained high CPU usage detected",
+        "probable_cause": "The process 'stress-ng-cpu' (PID 236749) is consuming excessive CPU resources, causing the CPU usage to remain critically high.",
+        "confidence": 0.95,
+        "recommendation": "Investigate the necessity of the 'stress-ng-cpu' process. If it is not required, terminate it to reduce CPU load. If it is needed for testing, consider limiting its CPU usage or running it during off-peak hours.",
+        "action": "kill_process",
+        "command": "pkill -f stress-ng-cpu",
+        "source": "hybrid"
+    },
+    "execution": {
+        "timestamp": "2026-04-21T11:18:01.348171",
+        "status": "success",
+        "details": "Executed: pkill -f stress-ng-cpu"
+    },
+    "approval": {
+        "approved": true,
+        "reason": "User approved action"
+    },
+    "human_summary": {
+        "incident_summary": {
+            "what_happened": "Sustained high CPU usage was detected causing critical system performance issues.",
+            "root_cause": "The process 'stress-ng-cpu' (PID 236749) was consuming excessive CPU resources.",
+            "impact": "Critical CPU load leading to potential system degradation or unresponsiveness.",
+            "action_taken": "The 'stress-ng-cpu' process was terminated using 'pkill -f stress-ng-cpu' following user approval."
+        }
+    }
+}
+
+

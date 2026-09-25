@@ -1,0 +1,13 @@
+Timestamp,Interaction ID,Service Name,Operation,Operator ID,Case ID,Success,Timeout,HTTP Status,Total Time (ms),Remote System,Error Message
+2026-05-25 14:15:20,INT-900000000010,CreditCheckService,POST,user-uuid-abc,78812,true,false,200,183,ext-credit-bureau,
+2026-05-25 14:16:10,INT-900000000011,CreditCheckService,POST,user-uuid-ghi,78820,true,false,200,176,ext-credit-bureau,
+2026-05-25 14:16:50,INT-900000000012,CustomerLookupService,GET,user-uuid-def,78815,true,false,200,92,crm-customer-svc,
+2026-05-25 14:17:20,INT-900000000013,DocumentService,GET,user-uuid-jkl,78825,true,false,200,215,ecm-docstore,
+2026-05-25 14:18:15,INT-900000000014,CreditCheckService,POST,user-uuid-mno,78850,true,false,200,190,ext-credit-bureau,
+2026-05-25 14:20:05,INT-900000000015,PaymentGatewayService,POST,user-uuid-abc,78830,true,false,200,330,ext-payment-gateway,
+2026-05-25 14:22:12,INT-900000000001,CreditCheckService,POST,user-uuid-abc,78901,false,true,504,41230,ext-credit-bureau,Connection to ext-credit-bureau timed out after 41230ms
+2026-05-25 14:23:35,INT-900000000002,CreditCheckService,POST,user-uuid-yza,79055,false,true,504,45870,ext-credit-bureau,Connection to ext-credit-bureau timed out after 45870ms
+2026-05-25 14:25:08,INT-900000000003,CreditCheckService,POST,user-uuid-efg,79088,false,true,504,38940,ext-credit-bureau,Connection to ext-credit-bureau timed out after 38940ms
+2026-05-25 14:25:49,INT-900000000004,CreditCheckService,POST,user-uuid-hij,79091,false,true,504,52110,ext-credit-bureau,Connection to ext-credit-bureau timed out after 52110ms
+2026-05-25 14:26:30,INT-900000000005,CreditCheckService,POST,user-uuid-klm,79115,false,true,504,47600,ext-credit-bureau,Connection to ext-credit-bureau timed out after 47600ms
+2026-05-25 14:29:00,INT-900000000006,CreditCheckService,POST,user-uuid-qrs,79175,false,true,504,40320,ext-credit-bureau,Connection to ext-credit-bureau timed out after 40320ms

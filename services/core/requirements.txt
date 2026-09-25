@@ -1,0 +1,34 @@
+# APIFICATION: core-service dependencies (everything except streamlit + readers-only libs).
+fastapi>=0.110
+uvicorn[standard]>=0.27
+httpx
+pydantic>=2
+PyYAML>=6.0
+python-dotenv
+
+# DB
+sqlalchemy>=2.0
+alembic>=1.13
+psycopg2-binary
+
+# LLM + orchestration
+openai
+langgraph
+
+# Vector search (POINT 19)
+faiss-cpu
+numpy
+
+# Jira MCP (POINT 20)
+fastmcp
+
+# Observability (POINT 21) — optional at runtime, imported lazily
+opentelemetry-sdk
+opentelemetry-exporter-otlp
+
+# Secrets (Azure Key Vault; no-op locally)
+azure-identity
+azure-keyvault-secrets
+
+# Misc used by the analyzers / verifier
+psutil

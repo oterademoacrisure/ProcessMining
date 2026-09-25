@@ -1,0 +1,272 @@
+# Source-type -> reader / analyzer / sink registration.
+#
+# Each entry under `sources` declares how the orchestrator handles a given
+# source_type:
+#   - reader:   dotted path to a class extending app.readers.base.BaseReader.
+#               Used to ingest from the source into EVENT_LOG.
+#   - analyzer: dotted path to a class extending app.analyzers.base.BaseAnalyzer.
+#               Used by the orchestrator to interpret EVENT_LOG rows for this
+#               source_type after the shared DB reader polls them.
+#   - sinks:    list of dotted paths to classes extending app.sinks.base.BaseSink.
+#               Each sink consumes the analyzer result. This is the seam where
+#               downstream behavior (logging, LangGraph RCA, Jira tickets, ...)
+#               plugs in without changing the dispatcher.
+#   - config:   free-form per-module settings passed to every class above.
+#
+# To onboard a new data source, add an entry here and ship the matching
+# reader + analyzer + sink classes. No code in the orchestrator changes.
+
+sources:
+  simulator:
+    reader: app.readers.simulator_file_reader.SimulatorFileReader
+    analyzer: app.analyzers.prometheus_metrics_analyzer.PrometheusMetricsAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/simulator
+      poll_interval_sec: 10
+
+  prometheus:
+    reader: app.readers.prometheus_reader.PrometheusReader
+    analyzer: app.analyzers.prometheus_metrics_analyzer.PrometheusMetricsAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/prometheus
+      poll_interval_sec: 30
+
+  fluentd:
+    reader: app.readers.fluentd_reader.FluentdReader
+    analyzer: app.analyzers.fluentd_severity_analyzer.FluentdSeverityAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/fluentd
+      file_glob: "*.jsonl"
+
+  appian_process_metrics:
+    reader: app.readers.appian_process_metrics_reader.AppianProcessMetricsReader
+    analyzer: app.analyzers.appian_process_metrics_analyzer.AppianProcessMetricsAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/appian
+      server_id: service-manager-01
+
+  appian_integration_trace:
+    reader: app.readers.appian_integration_trace_reader.AppianIntegrationTraceReader
+    analyzer: app.analyzers.appian_integration_analyzer.AppianIntegrationAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/appian
+      server_id: appian-webapp-03
+      process_definition_name: appian_default
+
+  appian_task_errors:
+    reader: app.readers.appian_task_errors_reader.AppianTaskErrorsReader
+    analyzer: app.analyzers.appian_task_errors_analyzer.AppianTaskErrorsAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/appian
+      server_id: appian-webapp-03
+
+  # Mulesoft runtime logs — the 4th source. Its events carry appian_process_id,
+  # which the reader maps to case_reference_id under the SAME
+  # process_definition_name as appian_integration_trace below; persist_events
+  # resolves both to one numeric case_id, so the incident grouper merges Mule
+  # findings with the correlated Appian findings. Keep process_definition_name
+  # in lockstep with appian_integration_trace.
+  mule:
+    reader: app.readers.mule_reader.MuleReader
+    analyzer: app.analyzers.mule_analyzer.MuleAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/mule
+      file_glob: "*.jsonl"
+      process_definition_name: appian_default
+
+  # Pega integration-trace logs (BPM source). To CORRELATE Pega into the SAME
+  # incident as Appian/Mule (one merged report, NOT a separate Pega report), it
+  # shares their case space — exactly like the mule source above: set
+  # process_definition_name to appian_default AND have the CSV reuse the SAME
+  # Case IDs (= Appian Process IDs) within the same time window. persist_events
+  # then resolves them to one case_id, so the incident grouper merges Pega in as
+  # an extra source. Case ID -> case_reference_id, Operator ID -> actor_id.
+  pega_integration_trace:
+    reader: app.readers.pega_integration_trace_reader.PegaIntegrationTraceReader
+    analyzer: app.analyzers.pega_integration_analyzer.PegaIntegrationAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      input_dir: data/input/pega
+      server_id: pega-webapp-01
+      process_definition_name: appian_default
+
+
+# Tier-2: cross-source investigators.
+# Each investigator subscribes to one or more (source_type, min_severity)
+# triggers. When a matching tier-1 finding is persisted, the investigator is
+# run; it queries EVENT_LOG and the finding table within a time window to
+# build a multi-source root-cause hypothesis.
+# ─────────────────────────────────────────────────────────────────────────────
+# Tier-3 remediation (Phase D)
+#
+# After an operator clicks Approve on a recommended_action in the UI, the
+# remediation_dispatcher picks it up and runs it through a LangGraph
+# workflow:
+#
+#   VALIDATE  -> allow-list check (restart-only in V1)
+#   EXECUTE   -> Mock / DryRun / Real
+#   VERIFY    -> Mock confidence-driven (Real would re-poll the metric)
+#   REPORT    -> updates DB + posts ServiceNow journal comment
+#
+# Defaults below are safe for demos: nothing actually runs against real
+# hosts. Switch executor_mode to `real` only with `confirm_real: true`
+# and valid cluster/SSH credentials.
+# ─────────────────────────────────────────────────────────────────────────────
+remediation:
+  executor_mode: mock          # mock | dry_run | real
+  verifier_mode: confidence_driven   # confidence_driven | always_pass
+  verify_confidence_threshold: 0.7   # below this, verify fails (unverified)
+  mock_duration_sec: 1.5             # how long mock execute takes (UI smoothness)
+  mock_verify_wait_sec: 1.0          # how long mock verify takes
+  mock_failure_rate: 0.0             # 0.0–1.0; chance a mock execute returns exit_code=1
+  real_timeout_sec: 60               # for dry_run / real modes
+  # confirm_real: true               # required to switch to executor_mode: real
+  # POINT 19 (Step 7): feedback loop — capture each finished remediation as
+  # precedent (verified -> approved, failed/unverified -> rejected) so future
+  # RCAs learn from our own outcomes. Vector settings mirror the investigator's
+  # so both read/write the SAME index.
+  precedent_feedback: true
+  vector_backend: faiss
+  vector_index_path: .data/precedent.faiss
+  embed_dim: 1536
+  # POINT 19: close_code sent when resolving the ServiceNow ticket on verify. MUST be
+  # a value valid on YOUR instance — run scripts/list_servicenow_close_codes.py to see
+  # the choices (newer instances don't have "Solved (Permanently)"). Used only in real mode.
+  resolve_close_code: "Solution provided"
+  # POINT 20 (Task #20): raise a Jira ticket for every command execution (via a local
+  # FastMCP Jira server — no Docker). Real Jira if JIRA_* creds are set in .env, else a
+  # local mock file. jira_real_only=true in production (real executions only); kept false
+  # here so the mock-executor demo also files tickets.
+  jira_enabled: true
+  jira_real_only: false
+  jira_project_key: "KAN"
+  jira_issue_type: "Task"
+  # MCP transport for the OWN server:
+  #   http  (DEFAULT) — connect to a long-running web service. You MUST start it first:
+  #            python app/mcp_servers/jira_server.py --http   (listens on jira_mcp_url)
+  #          Best for production (no per-call process spawn; shareable; FastAPI/uvicorn).
+  #   stdio — the client spawns the server per call (zero setup, but spawns each time).
+  jira_mcp_transport: http
+  jira_mcp_url: "http://127.0.0.1:8090/mcp"
+  # WHICH MCP server to file through:
+  #   own       — our local FastMCP server (API token; zero browser; default)
+  #   atlassian — Atlassian's HOSTED MCP (OAuth). Run scripts/authorize_atlassian.py ONCE
+  #               (browser); token persists in the OS keyring so the runner reuses it.
+  jira_mcp_server: own
+  # Streamable HTTP endpoint (/v1/mcp). The old /v1/sse transport is deprecated after 2026-06-30.
+  jira_atlassian_url: "https://mcp.atlassian.com/v1/mcp"
+  jira_cloud_id: "https://cognizant-team-ap1yn6ed.atlassian.net"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POINT 21 (Task #21): real-time pipeline-stage observability.
+#   progress_events — write a row per stage/sub-step to pipeline_event, which
+#                     powers the live "what's happening now" UI timeline. Always
+#                     safe (a write failure never affects the pipeline).
+#   retention_hours — how long to keep timeline rows (housekeeping).
+#
+# Optional engineering observability (OFF by default; needs opentelemetry-sdk +
+# opentelemetry-exporter-otlp, and the env vars below). Instrument ONCE via the
+# ProgressEmitter; spans fan out to:
+#   otel_enabled     — emit OpenTelemetry spans for every stage (infra tracing).
+#   langfuse_enabled — also ship LLM/model spans to Langfuse via its native OTLP
+#                      endpoint (no Langfuse SDK). Set LANGFUSE_HOST/PUBLIC_KEY/
+#                      SECRET_KEY in .env. Infra/APM uses OTEL_EXPORTER_OTLP_ENDPOINT.
+# ─────────────────────────────────────────────────────────────────────────────
+observability:
+  progress_events: true
+  retention_hours: 72
+  otel_enabled: true
+  otel_service_name: serverops
+  otel_console: true        # print spans to the terminal (zero-infra way to SEE OTel)
+  langfuse_enabled: true
+
+
+investigators:
+  # General-purpose investigator: gathers all correlated evidence and asks an
+  # LLM to produce a root-cause hypothesis with no presumed cause type.
+  # Falls back to evidence-only reports if Azure OpenAI is not configured.
+  llm_rca:
+    class: app.investigators.llm_rca_investigator.LlmRcaInvestigator
+    triggers:
+      - { source_type: appian_integration_trace, min_severity: high }
+      - { source_type: appian_process_metrics,   min_severity: high }
+      - { source_type: appian_task_errors,       min_severity: critical }
+      - { source_type: mule,                     min_severity: high }
+      - { source_type: pega_integration_trace,   min_severity: high }
+      - { source_type: fluentd,                  min_severity: critical }
+      - { source_type: prometheus,               min_severity: critical }
+      - { source_type: simulator,                min_severity: critical }
+    sinks:
+      - app.sinks.report_sinks.ConsoleReportSink
+      - app.sinks.report_sinks.RootCauseReportEmitterSink
+      - app.sinks.remediation_action_sink.RemediationActionEmitterSink
+      - app.sinks.servicenow_sink.ServiceNowReportSink
+    config:
+      window_minutes_before: 5
+      window_minutes_after: 1
+      max_related_findings: 20
+      max_sample_events_per_source: 5
+      llm_temperature: 0.2
+      # POINT 19 (Task #19): historical ServiceNow precedent retrieval.
+      #   history_enabled        — turn the whole feature on/off
+      #   history_k              — how many past incidents to surface
+      #   history_min_confidence — 0..1 relevance confidence to keep a precedent
+      #                            (0.60 ~= "at least a same-system-level match")
+      history_enabled: true
+      history_k: 3
+      history_min_confidence: 0.60
+      # POINT 19: hybrid precedent retrieval = semantic (vector) + keyword (FTS)
+      # + structural. The vector backend is swappable; default is FAISS (local,
+      # no infra). Switch to pgvector/qdrant later by changing vector_backend.
+      #   vector_backend    — faiss | pgvector | qdrant
+      #   vector_index_path — where the FAISS index file lives (faiss backend)
+      #   embed_dim         — embedding vector length (text-embedding-3-small = 1536)
+      #   embed_deployment  — Azure embedding deployment (else AZURE_OPENAI_EMBED_DEPLOYMENT)
+      vector_backend: faiss
+      vector_index_path: .data/precedent.faiss
+      embed_dim: 1536
+      # ServiceNow ticket creation (state-aware: comment on existing
+      # open tickets, create new only when prior was closed):
+      #   servicenow_mode: real | mock | dry_run
+      #     - real:    POST/PATCH to ServiceNow REST API. Needs SERVICENOW_*
+      #                env vars set (see .env).
+      #     - mock:    Write JSON file to data/output/servicenow_mock/.
+      #                Useful for local dev / demos without real ServiceNow.
+      #     - dry_run: Log payload to stdout, no side effects.
+      #   If omitted, defaults to 'real' when credentials are set, else 'mock'.
+      servicenow_mode: real
+      # servicenow_table: incident
+      # assignment_group: "Production Support"
+      # category: "Software"
+      # subcategory: "Application"
+      #
+      # ServiceNow incident state values that count as "open" — recurrences
+      # of the same incident identity will POST a comment on the most recent
+      # open ticket instead of creating a new one. Defaults below match the
+      # standard ServiceNow incident lifecycle:
+      #   1=New  2=In Progress  3=On Hold  6=Resolved  7=Closed  8=Canceled
+      # open_states: ["1", "2", "3"]

@@ -1,0 +1,13 @@
+Timestamp,User,Details
+2026-05-25 10:42:18,user-uuid-zzz,User does not have permission to view this task
+2026-05-25 13:05:44,user-uuid-old,Task is canceled or completed
+2026-05-25 14:23:55,user-uuid-abc,Task does not exist
+2026-05-25 14:24:18,user-uuid-vwx,Task is canceled or completed
+2026-05-25 14:24:42,user-uuid-yza,Task does not exist
+2026-05-25 14:25:07,user-uuid-bcd,Task does not exist
+2026-05-25 14:25:33,user-uuid-efg,Task is canceled or completed
+2026-05-25 14:25:58,user-uuid-hij,Task does not exist
+2026-05-25 14:26:21,user-uuid-klm,Task does not exist
+2026-05-25 14:26:49,user-uuid-abc,Task is canceled or completed
+2026-05-25 14:27:14,user-uuid-stu,User accessed a task using an integer in the URL. Task ID: 9982731
+2026-05-25 15:31:02,user-uuid-tuv,User does not have permission to view this task

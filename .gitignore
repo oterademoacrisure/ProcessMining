@@ -1,0 +1,179 @@
+# =============================================================================
+# Secrets & environment — NEVER commit
+# =============================================================================
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+*.key
+
+# Streamlit can store secrets in this file — never commit
+.streamlit/secrets.toml
+
+# =============================================================================
+# Python build artifacts
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+MANIFEST
+*.manifest
+*.spec
+
+# =============================================================================
+# Virtual environments
+# =============================================================================
+# Project-local venvs (we use `serverops/` as the venv folder — a typo-collision
+# with the package dir, hence the explicit listing). Also catch the common
+# alternatives.
+serverops/
+servops/
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# =============================================================================
+# Testing / coverage / type-check / lint caches
+# =============================================================================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.hypothesis/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.py,cover
+nosetests.xml
+
+# =============================================================================
+# Pipeline runtime artifacts — regenerable, don't commit
+# =============================================================================
+
+# Reader state files (byte offsets, processed-file lists). Re-derived from
+# scratch on next run; `dev_reset.py` deletes them.
+data/state/
+
+# Simulator-generated event files (transient)
+data/input/simulator/*.jsonl
+
+# ServiceNow mock-mode ticket files (regenerable)
+data/output/
+
+# Local policy documents — likely tenant-specific, often confidential
+# (Comment this out if your policy docs are sample/synthetic and meant to be
+# committed for demos.)
+data/policies/
+
+# Sample / debug exports
+*.dump
+*.bak
+
+# =============================================================================
+# Logs
+# =============================================================================
+*.log
+logs/
+*.log.*
+log/
+
+# =============================================================================
+# Local databases (in case anyone uses SQLite for local testing)
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# =============================================================================
+# Editor / IDE
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.project
+.pydevproject
+.spyderproject
+.spyproject
+
+# =============================================================================
+# Operating system
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# Jupyter
+# =============================================================================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# =============================================================================
+# Project-specific temp files
+# =============================================================================
+# Throwaway debug / verification scripts we create during development.
+_tmp_*.py
+_tmp_*.json
+_tmp_*.txt
+
+# Alembic generates this if you ever scaffold without specifying a version_path
+alembic.ini.local
+
+# =============================================================================
+# Archives & compiled bundles — never commit
+# =============================================================================
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+
+# =============================================================================
+# Generated documentation (regenerable from the .md source; keep .md, drop
+# the compiled Word file + intermediate build artifacts)
+# =============================================================================
+docs/_build/
+docs/*.docx
+
+# =============================================================================
+# Reference / scratch copies — not part of the main tree
+# =============================================================================
+# Colleague's Pega variant (full duplicate repo incl. its own venv/data). We
+# integrated only the Pega bits into main; keep this out of version control.
+serverops_pega/
+CHANGES_PEGA_SIMULATOR.txt
+tt.json
