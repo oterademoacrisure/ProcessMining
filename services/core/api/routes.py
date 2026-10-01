@@ -288,26 +288,26 @@ def _source_config_out(r: SourceConfig) -> SourceConfigOut:
     return SourceConfigOut(
         config_id=r.config_id,
         tenant_id=r.tenant_id,
-        source_type=r.source_type,
-        key=r.config_key,
-        value=r.config_value,
+        source_type=r.config["source_type"],
+        key=r.config["key"],
+        value=r.config["value"],
         updated_at=r.updated_at.isoformat(),
     )
 
 
 @router.put("/source-configs", response_model=SourceConfigOut)
 def source_config_upsert(body: SourceConfigUpsert) -> SourceConfigOut:
+    doc = {"source_type": body.source_type, "key": body.key, "value": body.value}
     stmt = (
         pg_insert(SourceConfig)
-        .values(
-            tenant_id=body.tenant_id,
-            source_type=body.source_type,
-            config_key=body.key,
-            config_value=body.value,
-        )
+        .values(tenant_id=body.tenant_id, config=doc)
         .on_conflict_do_update(
-            constraint="uq_source_config_tenant_source_key",
-            set_={"config_value": body.value, "updated_at": func.now()},
+            index_elements=[
+                SourceConfig.tenant_id,
+                text("(config->>'source_type')"),
+                text("(config->>'key')"),
+            ],
+            set_={"config": doc, "updated_at": func.now()},
         )
         .returning(SourceConfig)
     )
@@ -326,7 +326,7 @@ def source_config_upsert(body: SourceConfigUpsert) -> SourceConfigOut:
 def source_config_list(tenant_id: int = 1, source_type: str | None = None) -> list[SourceConfigOut]:
     q = select(SourceConfig).where(SourceConfig.tenant_id == tenant_id)
     if source_type:
-        q = q.where(SourceConfig.source_type == source_type)
-    q = q.order_by(SourceConfig.source_type, SourceConfig.config_key)
+        q = q.where(SourceConfig.config["source_type"].astext == source_type)
+    q = q.order_by(SourceConfig.config["source_type"].astext, SourceConfig.config["key"].astext)
     with SessionLocal() as s:
         return [_source_config_out(r) for r in s.scalars(q).all()]

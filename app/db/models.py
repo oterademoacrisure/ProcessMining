@@ -12,6 +12,7 @@ from sqlalchemy import (
     Index,
     UniqueConstraint,  # POINT 19: dedup key for historical_incident
     func,
+    text,
 )
 from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR  # POINT 19: TSVECTOR = full-text search type
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -339,9 +340,8 @@ class SourceConfig(Base):
     tenant_id: Mapped[int] = mapped_column(
         ForeignKey("tenant.tenant_id", ondelete="CASCADE"), nullable=False
     )
-    source_type: Mapped[str] = mapped_column(String(32), nullable=False)    # kubernetes|camunda|appian
-    config_key: Mapped[str] = mapped_column(String(128), nullable=False)
-    config_value: Mapped[str] = mapped_column(Text, nullable=False)
+    # {"source_type": "kubernetes|camunda|appian", "key": "...", "value": "..."}
+    config: Mapped[dict] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
@@ -351,5 +351,9 @@ class SourceConfig(Base):
 
     __table_args__ = (
         # one value per (tenant, source, key) — saving again overwrites
-        UniqueConstraint("tenant_id", "source_type", "config_key", name="uq_source_config_tenant_source_key"),
+        Index(
+            "uq_source_config_tenant_source_key",
+            "tenant_id", text("(config->>'source_type')"), text("(config->>'key')"),
+            unique=True,
+        ),
     )
