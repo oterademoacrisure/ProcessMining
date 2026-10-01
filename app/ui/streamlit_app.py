@@ -421,7 +421,7 @@ PAGE = st.sidebar.radio(
     "View",
     # Live Activity first → it's the default landing view (real-time dashboard),
     # the most compelling entry point for a demo/business audience.
-    ["Live Activity", "Overview", "Root-Cause Reports", "Pending Approvals", "Findings", "Events Explorer", "Cases", "Precedent Memory"],
+    ["Live Activity", "Overview", "Root-Cause Reports", "Pending Approvals", "Findings", "Events Explorer", "Cases", "Precedent Memory", "Source Configuration"],
     label_visibility="collapsed",
 )
 
@@ -1163,6 +1163,76 @@ def page_live_activity():
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Source Configuration — key/value settings per source type.
+# UI → config-service → core-service (aggregator) → source_config table.
+# ─────────────────────────────────────────────────────────────────────────────
+_SOURCE_TYPE_LABELS = {"kubernetes": "Kubernetes", "camunda": "Camunda", "appian": "Appian"}
+
+
+def _clear_source_config_form():
+    st.session_state["cfg_key"] = ""
+    st.session_state["cfg_value"] = ""
+
+
+def _save_source_config():
+    key = st.session_state.get("cfg_key", "").strip()
+    value = st.session_state.get("cfg_value", "").strip()
+    if not key or not value:
+        st.session_state["cfg_flash"] = ("error", "Key and Value are both required.")
+        return
+    try:
+        api_client.save_source_config(
+            tenant_id=int(TENANT_ID),
+            source_type=st.session_state["cfg_source_type"],
+            key=key,
+            value=value,
+        )
+    except Exception as e:
+        st.session_state["cfg_flash"] = ("error", f"Save failed: {e}")
+        return
+    label = _SOURCE_TYPE_LABELS[st.session_state["cfg_source_type"]]
+    st.session_state["cfg_flash"] = ("success", f"Saved {label} / {key}.")
+    _clear_source_config_form()
+
+
+def page_source_configuration():
+    st.title("Source Configuration")
+    st.caption("Key/value settings per source type (e.g. Key `UI` → Value = UI path). "
+               "Saving an existing key overwrites its value.")
+
+    with st.container(border=True):
+        st.selectbox(
+            "Source Type",
+            options=list(_SOURCE_TYPE_LABELS),
+            format_func=_SOURCE_TYPE_LABELS.get,
+            key="cfg_source_type",
+        )
+        st.text_input("Key", key="cfg_key", placeholder="e.g. UI")
+        st.text_input("Value", key="cfg_value", placeholder="e.g. /opt/appian/ui")
+        c1, c2, _ = st.columns([1, 1, 6])
+        c1.button("OK", type="primary", use_container_width=True, on_click=_save_source_config)
+        c2.button("Cancel", use_container_width=True, on_click=_clear_source_config_form)
+
+    flash = st.session_state.pop("cfg_flash", None)
+    if flash:
+        getattr(st, flash[0])(flash[1])
+
+    st.subheader("Saved configuration")
+    try:
+        rows = api_client.list_source_configs(tenant_id=int(TENANT_ID))
+    except Exception as e:
+        st.error(f"Could not load configuration: {e}")
+        return
+    if not rows:
+        st.info("No configuration saved for this tenant yet.")
+        return
+    df = pd.DataFrame(rows)[["source_type", "key", "value", "updated_at"]]
+    df["source_type"] = df["source_type"].map(lambda v: _SOURCE_TYPE_LABELS.get(v, v))
+    df.columns = ["Source Type", "Key", "Value", "Updated"]
+    st.dataframe(df, use_container_width=True, hide_index=True)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Router
 # ─────────────────────────────────────────────────────────────────────────────
 PAGES = {
@@ -1174,5 +1244,6 @@ PAGES = {
     "Events Explorer":    page_events,
     "Cases":              page_cases,
     "Precedent Memory":   page_precedent_memory,
+    "Source Configuration": page_source_configuration,
 }
 PAGES[PAGE]()

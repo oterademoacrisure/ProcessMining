@@ -91,3 +91,31 @@ def precedent_search(tenant_id: int, query: str, k: int = 5) -> dict[str, Any]:
         )
         r.raise_for_status()
         return r.json()
+
+
+# ── config-service — Source Configuration page ─────────────────────────────
+def _config_client() -> httpx.Client:
+    base = os.getenv("CONFIG_SERVICE_URL", "http://config-service:8200").rstrip("/")
+    return httpx.Client(base_url=base, timeout=float(os.getenv("CONFIG_HTTP_TIMEOUT", "15")))
+
+
+def save_source_config(tenant_id: int, source_type: str, key: str, value: str) -> dict[str, Any]:
+    with _config_client() as c:
+        r = c.post(
+            "/configs",
+            json={"tenant_id": tenant_id, "source_type": source_type, "key": key, "value": value},
+        )
+        if r.status_code >= 400:
+            try:
+                detail = r.json().get("detail")
+            except Exception:
+                detail = r.text
+            raise RuntimeError(str(detail))
+        return r.json()
+
+
+def list_source_configs(tenant_id: int) -> list[dict[str, Any]]:
+    with _config_client() as c:
+        r = c.get("/configs", params={"tenant_id": tenant_id})
+        r.raise_for_status()
+        return r.json()

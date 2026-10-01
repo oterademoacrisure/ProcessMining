@@ -1,0 +1,5 @@
+# config-service dependencies. No SQL — persistence goes through core-service.
+fastapi>=0.110
+uvicorn[standard]>=0.27
+httpx
+pydantic>=2

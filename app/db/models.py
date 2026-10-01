@@ -325,3 +325,31 @@ class PipelineEvent(Base):
         # global "recent activity" feed (tenant, newest first)
         Index("ix_pipeline_event_tenant_created", "tenant_id", "created_at"),
     )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Source configuration — operator-managed key/value settings per source type
+# (e.g. appian / UI → path). Written by core-service on behalf of the
+# independent config-service; read by readers at the start of each poll cycle.
+# ─────────────────────────────────────────────────────────────────────────────
+class SourceConfig(Base):
+    __tablename__ = "source_config"
+
+    config_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    tenant_id: Mapped[int] = mapped_column(
+        ForeignKey("tenant.tenant_id", ondelete="CASCADE"), nullable=False
+    )
+    source_type: Mapped[str] = mapped_column(String(32), nullable=False)    # kubernetes|camunda|appian
+    config_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    config_value: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+    )
+
+    __table_args__ = (
+        # one value per (tenant, source, key) — saving again overwrites
+        UniqueConstraint("tenant_id", "source_type", "config_key", name="uq_source_config_tenant_source_key"),
+    )

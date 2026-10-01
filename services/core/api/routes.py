@@ -1,9 +1,10 @@
 """APIFICATION: core-service HTTP routes (UI-facing).
 
-Three groups:
-  1. /query          — named-view escape hatch for the UI's read paths
-  2. /actions/...    — write path for operator decisions (wraps decide_action)
-  3. /precedent/...  — read paths for the FAISS-backed Precedent Memory page
+Four groups:
+  1. /query           — named-view escape hatch for the UI's read paths
+  2. /actions/...     — write path for operator decisions (wraps decide_action)
+  3. /precedent/...   — read paths for the FAISS-backed Precedent Memory page
+  4. /source-configs  — storage for config-service (key/value per source type)
 """
 from __future__ import annotations
 
@@ -16,9 +17,10 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select, text
+from sqlalchemy import func, select, text
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 
-from app.db.models import HistoricalIncident
+from app.db.models import HistoricalIncident, SourceConfig
 from app.db.session import SessionLocal
 from app.paths import PROJECT_ROOT
 from app.remediation.decisions import decide_action
@@ -261,3 +263,70 @@ def precedent_search(body: PrecedentSearchRequest) -> PrecedentSearchResponse:
             close_notes=(r.close_notes if r else None),
         ))
     return PrecedentSearchResponse(embedder_mode=getattr(emb, "mode", "unknown"), hits=out)
+
+
+# ── /source-configs — storage behind the independent config-service ────────
+# config-service owns validation and the public contract; core-service is the
+# only service with a DB connection, so it just persists and lists rows.
+class SourceConfigUpsert(BaseModel):
+    tenant_id: int = 1
+    source_type: str
+    key: str
+    value: str
+
+
+class SourceConfigOut(BaseModel):
+    config_id: int
+    tenant_id: int
+    source_type: str
+    key: str
+    value: str
+    updated_at: str
+
+
+def _source_config_out(r: SourceConfig) -> SourceConfigOut:
+    return SourceConfigOut(
+        config_id=r.config_id,
+        tenant_id=r.tenant_id,
+        source_type=r.source_type,
+        key=r.config_key,
+        value=r.config_value,
+        updated_at=r.updated_at.isoformat(),
+    )
+
+
+@router.put("/source-configs", response_model=SourceConfigOut)
+def source_config_upsert(body: SourceConfigUpsert) -> SourceConfigOut:
+    stmt = (
+        pg_insert(SourceConfig)
+        .values(
+            tenant_id=body.tenant_id,
+            source_type=body.source_type,
+            config_key=body.key,
+            config_value=body.value,
+        )
+        .on_conflict_do_update(
+            constraint="uq_source_config_tenant_source_key",
+            set_={"config_value": body.value, "updated_at": func.now()},
+        )
+        .returning(SourceConfig)
+    )
+    try:
+        with SessionLocal() as s:
+            row = s.scalars(stmt).one()
+            out = _source_config_out(row)
+            s.commit()
+    except Exception as e:
+        log.exception("source_config upsert failed")
+        raise HTTPException(status_code=500, detail=f"save failed: {e}")
+    return out
+
+
+@router.get("/source-configs", response_model=list[SourceConfigOut])
+def source_config_list(tenant_id: int = 1, source_type: str | None = None) -> list[SourceConfigOut]:
+    q = select(SourceConfig).where(SourceConfig.tenant_id == tenant_id)
+    if source_type:
+        q = q.where(SourceConfig.source_type == source_type)
+    q = q.order_by(SourceConfig.source_type, SourceConfig.config_key)
+    with SessionLocal() as s:
+        return [_source_config_out(r) for r in s.scalars(q).all()]
