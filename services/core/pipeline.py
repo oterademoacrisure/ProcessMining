@@ -150,7 +150,7 @@ def build_pipeline() -> Pipeline:
     config_path = Path(os.getenv("MODULES_YAML", PROJECT_ROOT / "config" / "modules.yaml"))
     tenant_id = int(os.getenv("TENANT_ID", "1"))
     interval_sec = int(os.getenv("INTERVAL_SEC", "10"))
-    reader_url = os.getenv("READER_SERVICE_URL", "http://reader-service:8100")
+    reader_url = os.getenv("READER_SERVICE_URL", "http://localhost:8100")
     return Pipeline(
         config_path=config_path,
         tenant_id=tenant_id,

@@ -22,7 +22,7 @@ log = logging.getLogger("core.reader_client")
 
 class ReaderClient:
     def __init__(self, base_url: str | None = None, timeout: float = 30.0) -> None:
-        self.base_url = (base_url or os.getenv("READER_SERVICE_URL", "http://reader-service:8100")).rstrip("/")
+        self.base_url = (base_url or os.getenv("READER_SERVICE_URL", "http://localhost:8100")).rstrip("/")
         # httpx.Client is thread-safe; one instance is fine for the whole process.
         self._client = httpx.Client(base_url=self.base_url, timeout=timeout)
 

@@ -13,7 +13,7 @@ import pandas as pd
 
 
 def _base_url() -> str:
-    return os.getenv("CORE_SERVICE_URL", "http://core-service:8000").rstrip("/")
+    return os.getenv("CORE_SERVICE_URL", "http://localhost:8000").rstrip("/")
 
 
 def _client() -> httpx.Client:
@@ -95,7 +95,7 @@ def precedent_search(tenant_id: int, query: str, k: int = 5) -> dict[str, Any]:
 
 # ── config-service — Source Configuration page ─────────────────────────────
 def _config_client() -> httpx.Client:
-    base = os.getenv("CONFIG_SERVICE_URL", "http://config-service:8200").rstrip("/")
+    base = os.getenv("CONFIG_SERVICE_URL", "http://localhost:8200").rstrip("/")
     return httpx.Client(base_url=base, timeout=float(os.getenv("CONFIG_HTTP_TIMEOUT", "15")))
 
 

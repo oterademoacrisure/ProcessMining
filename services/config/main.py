@@ -38,7 +38,7 @@ SOURCE_TYPES: list[dict[str, str]] = [
 
 
 def _aggregator() -> httpx.Client:
-    base = os.getenv("AGGREGATOR_SERVICE_URL", "http://core-service:8000").rstrip("/")
+    base = os.getenv("AGGREGATOR_SERVICE_URL", "http://localhost:8000").rstrip("/")
     return httpx.Client(base_url=base, timeout=float(os.getenv("AGGREGATOR_HTTP_TIMEOUT", "10")))
 
 
