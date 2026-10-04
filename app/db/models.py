@@ -340,7 +340,7 @@ class SourceConfig(Base):
     tenant_id: Mapped[int] = mapped_column(
         ForeignKey("tenant.tenant_id", ondelete="CASCADE"), nullable=False
     )
-    # {"source_type": "kubernetes|camunda|appian", "key": "...", "value": "..."}
+    # {"source_type": "<catalog in services/config/main.py>", "key": "...", "value": "..."}
     config: Mapped[dict] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

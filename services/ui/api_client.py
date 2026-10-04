@@ -110,6 +110,8 @@ def save_source_config(tenant_id: int, source_type: str, key: str, value: str) -
                 detail = r.json().get("detail")
             except Exception:
                 detail = r.text
+            if isinstance(detail, list):  # SOURCE-CONFIG: pydantic 422 → readable message
+                detail = "; ".join(str(d.get("msg", d)) for d in detail)
             raise RuntimeError(str(detail))
         return r.json()
 
@@ -117,5 +119,23 @@ def save_source_config(tenant_id: int, source_type: str, key: str, value: str) -
 def list_source_configs(tenant_id: int) -> list[dict[str, Any]]:
     with _config_client() as c:
         r = c.get("/configs", params={"tenant_id": tenant_id})
+        r.raise_for_status()
+        return r.json()
+
+
+# SOURCE-CONFIG: dropdown catalog comes from config-service (single source of truth).
+def list_source_types() -> list[dict[str, str]]:
+    with _config_client() as c:
+        r = c.get("/source-types")
+        r.raise_for_status()
+        return r.json()
+
+
+def delete_source_config(tenant_id: int, source_type: str, key: str) -> dict[str, Any]:
+    with _config_client() as c:
+        r = c.delete(
+            "/configs",
+            params={"tenant_id": tenant_id, "source_type": source_type, "key": key},
+        )
         r.raise_for_status()
         return r.json()

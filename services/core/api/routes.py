@@ -17,7 +17,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import func, select, text
+from sqlalchemy import delete, func, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from app.db.models import HistoricalIncident, SourceConfig
@@ -330,3 +330,23 @@ def source_config_list(tenant_id: int = 1, source_type: str | None = None) -> li
     q = q.order_by(SourceConfig.config["source_type"].astext, SourceConfig.config["key"].astext)
     with SessionLocal() as s:
         return [_source_config_out(r) for r in s.scalars(q).all()]
+
+
+# SOURCE-CONFIG: remove one (tenant, source_type, key) entry.
+@router.delete("/source-configs")
+def source_config_delete(source_type: str, key: str, tenant_id: int = 1) -> dict[str, Any]:
+    stmt = delete(SourceConfig).where(
+        SourceConfig.tenant_id == tenant_id,
+        SourceConfig.config["source_type"].astext == source_type,
+        SourceConfig.config["key"].astext == key,
+    )
+    try:
+        with SessionLocal() as s:
+            deleted = s.execute(stmt).rowcount
+            s.commit()
+    except Exception as e:
+        log.exception("source_config delete failed")
+        raise HTTPException(status_code=500, detail=f"delete failed: {e}")
+    if not deleted:
+        raise HTTPException(status_code=404, detail="not found")
+    return {"deleted": deleted}

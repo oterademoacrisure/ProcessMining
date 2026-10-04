@@ -1166,7 +1166,9 @@ def page_live_activity():
 # Source Configuration — key/value settings per source type.
 # UI → config-service → core-service (aggregator) → source_config table.
 # ─────────────────────────────────────────────────────────────────────────────
-_SOURCE_TYPE_LABELS = {"kubernetes": "Kubernetes", "camunda": "Camunda", "appian": "Appian"}
+def _source_types() -> dict[str, dict]:
+    # SOURCE-CONFIG: catalog is owned by config-service; no local copy.
+    return {t["value"]: t for t in api_client.list_source_types()}
 
 
 def _clear_source_config_form():
@@ -1190,25 +1192,40 @@ def _save_source_config():
     except Exception as e:
         st.session_state["cfg_flash"] = ("error", f"Save failed: {e}")
         return
-    label = _SOURCE_TYPE_LABELS[st.session_state["cfg_source_type"]]
-    st.session_state["cfg_flash"] = ("success", f"Saved {label} / {key}.")
+    st.session_state["cfg_flash"] = ("success", f"Saved {st.session_state['cfg_source_type']} / {key}.")
     _clear_source_config_form()
+
+
+def _delete_source_config(source_type: str, key: str):
+    try:
+        api_client.delete_source_config(tenant_id=int(TENANT_ID), source_type=source_type, key=key)
+    except Exception as e:
+        st.session_state["cfg_flash"] = ("error", f"Delete failed: {e}")
+        return
+    st.session_state["cfg_flash"] = ("success", f"Deleted {source_type} / {key}.")
 
 
 def page_source_configuration():
     st.title("Source Configuration")
-    st.caption("Key/value settings per source type (e.g. Key `UI` → Value = UI path). "
+    st.caption("Key = component (e.g. `vote`), Value = where to read it from (e.g. its log URL). "
                "Saving an existing key overwrites its value.")
+
+    try:
+        types = _source_types()
+    except Exception as e:
+        st.error(f"Could not load source types from config-service: {e}")
+        return
 
     with st.container(border=True):
         st.selectbox(
             "Source Type",
-            options=list(_SOURCE_TYPE_LABELS),
-            format_func=_SOURCE_TYPE_LABELS.get,
+            options=list(types),
+            format_func=lambda v: types[v]["label"],
             key="cfg_source_type",
         )
-        st.text_input("Key", key="cfg_key", placeholder="e.g. UI")
-        st.text_input("Value", key="cfg_value", placeholder="e.g. /opt/appian/ui")
+        hint = types[st.session_state["cfg_source_type"]]
+        st.text_input("Key", key="cfg_key", placeholder=hint["key_hint"])
+        st.text_input("Value", key="cfg_value", placeholder=hint["value_hint"])
         c1, c2, _ = st.columns([1, 1, 6])
         c1.button("OK", type="primary", use_container_width=True, on_click=_save_source_config)
         c2.button("Cancel", use_container_width=True, on_click=_clear_source_config_form)
@@ -1227,9 +1244,17 @@ def page_source_configuration():
         st.info("No configuration saved for this tenant yet.")
         return
     df = pd.DataFrame(rows)[["source_type", "key", "value", "updated_at"]]
-    df["source_type"] = df["source_type"].map(lambda v: _SOURCE_TYPE_LABELS.get(v, v))
+    # Rows under a retired type name show the raw value so they can be spotted and deleted.
+    df["source_type"] = df["source_type"].map(lambda v: types[v]["label"] if v in types else v)
     df.columns = ["Source Type", "Key", "Value", "Updated"]
     st.dataframe(df, use_container_width=True, hide_index=True)
+
+    # SOURCE-CONFIG: delete one saved entry.
+    pairs = [(r["source_type"], r["key"]) for r in rows]
+    d1, d2 = st.columns([5, 1])
+    target = d1.selectbox("Delete entry", options=pairs, format_func=lambda p: f"{p[0]} / {p[1]}",
+                          key="cfg_delete_target")
+    d2.button("Delete", use_container_width=True, on_click=_delete_source_config, args=target)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
