@@ -27,8 +27,11 @@ sources:
       input_dir: data/input/simulator
       poll_interval_sec: 10
 
+  # AZURE-MONITOR: rows on the Source Configuration page (key = namespace,
+  # value = Prometheus query endpoint) are queried live; with no rows the reader
+  # falls back to the input_dir files below.
   prometheus:
-    reader: app.readers.prometheus_reader.PrometheusReader
+    reader: app.readers.prometheus_api_reader.PrometheusApiReader
     analyzer: app.analyzers.prometheus_metrics_analyzer.PrometheusMetricsAnalyzer
     sinks:
       - app.sinks.console_sink.ConsoleSink
@@ -36,6 +39,7 @@ sources:
     config:
       input_dir: data/input/prometheus
       poll_interval_sec: 30
+      api_poll_interval_sec: 60   # AZURE-MONITOR: per namespace, live API mode
 
   fluentd:
     reader: app.readers.fluentd_reader.FluentdReader
@@ -112,6 +116,37 @@ sources:
       input_dir: data/input/pega
       server_id: pega-webapp-01
       process_definition_name: appian_default
+
+  # K8S-POD-LOGS: Kubernetes pod logs over HTTP. Targets (component -> URL) come
+  # from the Source Configuration page (config-service), not from this file.
+  # The reader writes Fluentd-shaped metadata (level/logger/message), so the
+  # Fluentd analyzer is reused as-is: ERROR/WARN counted per pod (server_id).
+  kubernetes_pod_logs:
+    reader: app.readers.k8s_pod_log_reader.K8sPodLogReader
+    analyzer: app.analyzers.fluentd_severity_analyzer.FluentdSeverityAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      poll_interval_sec: 60       # per component; endpoints use tail=N, so keep it short
+      http_timeout_sec: 10
+      max_message_chars: 500
+
+  # AZURE-MONITOR: AKS container logs from Azure Log Analytics (ContainerLogV2).
+  # One row per namespace on the Source Configuration page covers every pod.
+  # Same Fluentd-shaped metadata as kubernetes_pod_logs, so the same analyzer.
+  azure_container_logs:
+    reader: app.readers.azure_container_logs_reader.AzureContainerLogsReader
+    analyzer: app.analyzers.fluentd_severity_analyzer.FluentdSeverityAnalyzer
+    sinks:
+      - app.sinks.console_sink.ConsoleSink
+      - app.sinks.findings_emitter_sink.FindingsEmitterSink
+    config:
+      poll_interval_sec: 60       # per namespace
+      http_timeout_sec: 30
+      initial_lookback_min: 15    # first poll only; afterwards the ingestion watermark
+      max_rows_per_poll: 5000
+      max_message_chars: 500
 
 
 # Tier-2: cross-source investigators.
@@ -218,6 +253,7 @@ investigators:
       - { source_type: mule,                     min_severity: high }
       - { source_type: pega_integration_trace,   min_severity: high }
       - { source_type: fluentd,                  min_severity: critical }
+      - { source_type: kubernetes_pod_logs,      min_severity: critical }  # K8S-POD-LOGS
       - { source_type: prometheus,               min_severity: critical }
       - { source_type: simulator,                min_severity: critical }
     sinks:

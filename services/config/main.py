@@ -45,14 +45,19 @@ log = logging.getLogger("config-service")
 # modules.yaml convention: <platform>_<telemetry kind>.
 #   value_kind "url"  — value must be an http(s) URL the reader fetches
 #   value_kind "text" — free text (e.g. a path)
-SourceType = Literal["kubernetes_pod_logs", "kubernetes_events", "prometheus", "appian"]
+SourceType = Literal["kubernetes_pod_logs", "kubernetes_events", "prometheus", "appian",
+                     "azure_container_logs"]  # AZURE-MONITOR
 SOURCE_TYPES: list[dict[str, str]] = [
     {"value": "kubernetes_pod_logs", "label": "Kubernetes Pod Logs", "value_kind": "url",
      "key_hint": "e.g. vote", "value_hint": "e.g. http://host/logs?app=vote&tail=200"},
     {"value": "kubernetes_events",   "label": "Kubernetes Events",   "value_kind": "url",
      "key_hint": "e.g. default", "value_hint": "e.g. http://host/events?namespace=default"},
     {"value": "prometheus",          "label": "Prometheus",          "value_kind": "url",
-     "key_hint": "e.g. cluster-1", "value_hint": "e.g. http://prometheus:9090"},
+     "key_hint": "namespace, e.g. default",  # AZURE-MONITOR
+     "value_hint": "e.g. https://<name>.<region>.prometheus.monitor.azure.com"},
+    {"value": "azure_container_logs", "label": "Azure Container Logs", "value_kind": "url",  # AZURE-MONITOR
+     "key_hint": "namespace, e.g. default",
+     "value_hint": "e.g. https://api.loganalytics.io/v1/workspaces/<WORKSPACE-ID>/query"},
     {"value": "appian",              "label": "Appian",              "value_kind": "text",
      "key_hint": "e.g. UI", "value_hint": "e.g. /opt/appian/ui"},
 ]

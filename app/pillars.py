@@ -46,6 +46,8 @@ SOURCE_TO_PILLAR: dict[str, str] = {
     # Pillar 3 — infra / application runtime
     "prometheus":                PILLAR_3_INFRA,
     "fluentd":                   PILLAR_3_INFRA,
+    "kubernetes_pod_logs":       PILLAR_3_INFRA,  # K8S-POD-LOGS
+    "azure_container_logs":      PILLAR_3_INFRA,  # AZURE-MONITOR
     "datadog":                   PILLAR_3_INFRA,
     "splunk":                    PILLAR_3_INFRA,
     "loki":                      PILLAR_3_INFRA,

@@ -31,6 +31,8 @@ _SECRET_ENV_VARS = [
     "JIRA_URL", "JIRA_EMAIL", "JIRA_API_TOKEN",
     # POINT 21 (Task #21): Langfuse keys for LLM observability (via OTLP).
     "LANGFUSE_HOST", "LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY",
+    # AZURE-MONITOR: read-only service principal for Log Analytics + managed Prometheus.
+    "AZURE_TENANT_ID", "AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET",
 ]
 
 _kv_loaded = False
